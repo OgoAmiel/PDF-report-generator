@@ -4,7 +4,7 @@ const path = require("path");
 const { chromium } = require("playwright");
 
 const projectRoot = __dirname;
-const outputPath = path.join(projectRoot, "reports", "test.pdf");
+const outputPath = process.argv[2] || path.join(projectRoot, "reports", "test.pdf");
 
 function getReportData() {
   const python = path.join(projectRoot, "venv", "Scripts", "python.exe");

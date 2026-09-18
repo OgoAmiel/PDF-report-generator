@@ -45,6 +45,15 @@ def seed_orders(order_count: int = 200) -> None:
             )
             """
         )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reports (
+                id TEXT PRIMARY KEY,
+                path TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
         connection.execute("DELETE FROM orders")
         connection.executemany(
             """
