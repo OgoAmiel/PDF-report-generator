@@ -5,6 +5,7 @@ const { chromium } = require("playwright");
 
 const projectRoot = __dirname;
 const outputPath = process.argv[2] || path.join(projectRoot, "reports", "test.pdf");
+const screenshotPath = path.join(projectRoot, "docs", "report-page-1.png");
 
 function getReportData() {
   const python = path.join(projectRoot, "venv", "Scripts", "python.exe");
@@ -18,10 +19,14 @@ async function renderReport() {
   const html = template.replace("{{REPORT_DATA}}", reportData);
 
   mkdirSync(path.dirname(outputPath), { recursive: true });
+  mkdirSync(path.dirname(screenshotPath), { recursive: true });
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage();
+    await page.setViewportSize({ width: 794, height: 1123 });
     await page.setContent(html, { waitUntil: "load" });
+    await page.emulateMedia({ media: "print" });
+    await page.screenshot({ path: screenshotPath });
     await page.pdf({ path: outputPath, format: "A4", printBackground: true });
   } finally {
     await browser.close();
