@@ -36,10 +36,18 @@ def getReportData() -> dict[str, object]:
             ORDER BY created_at
             """
         ).fetchall()
+        all_orders = connection.execute(
+            """
+            SELECT id, customer, product, amount, created_at
+            FROM orders
+            ORDER BY created_at DESC, id DESC
+            """
+        ).fetchall()
 
     return {
         "total_orders": total_orders,
         "total_revenue": total_revenue,
         "top_products_by_revenue": [dict(row) for row in top_products],
         "orders_per_day_last_7_days": [dict(row) for row in orders_per_day],
+        "all_orders": [dict(row) for row in all_orders],
     }
